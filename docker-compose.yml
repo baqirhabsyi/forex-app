@@ -1,0 +1,19 @@
+version: '2'
+
+services:
+  npm:
+    build: ./
+    volumes:
+      - ".:/src/app"
+    ports:
+      - "3000:3000"
+    networks:
+      - test-network
+
+networks:
+  test-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.15.0.0/16
+          gateway: 172.15.0.1

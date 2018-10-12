@@ -34,7 +34,7 @@ Other than the ones bundled by `create-react-app`, the packages used by this app
 ```
 .
  |-public
-   |-src
+ |-src
    |---__tests__
    |-----components
    |-------__snapshots__

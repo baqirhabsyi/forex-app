@@ -1,52 +1,19 @@
 import React, { Component } from 'react';
 import { CurrencyInput, CurrencyList } from './layout'
-import TextInputHandler from './core/TextInputHandler'
+import TextInputHandler from './core/handler/TextInputHandler'
+import AddCurrencyComponent from './components/AddCurrencyComponent'
+import AddButtonHandler from './core/handler/AddButtonHandler'
+import CurrencyListHandler from './core/handler/CurrencyListHandler'
 import './App.css';
 
 const initialState = {
+  fetch: true,
   value: 1.00,
-  rates: {
-    "RON": 4.6723,
-    "RUB": 76.6491,
-    "BRL": 4.5116,
-    "TRY": 7.0525,
-    "DKK": 7.4567,
-    "KRW": 1298.27,
-    "JPY": 131.31,
-    "HUF": 324.43,
-    "SGD": 1.587,
-    "PHP": 62.482,
-    "CNY": 7.9006,
-    "NOK": 9.4643,
-    "SEK": 10.4015,
-    "MXN": 21.9097,
-    "GBP": 0.8858,
-    "IDR": 17448.53,
-    "HRK": 7.424,
-    "AUD": 1.6234,
-    "ZAR": 16.8813,
-    "BGN": 1.9558,
-    "CZK": 25.78,
-    "NZD": 1.7706,
-    "INR": 84.628,
-    "CAD": 1.48,
-    "THB": 37.537,
-    "HKD": 9.0114,
-    "MYR": 4.7699,
-    "PLN": 4.3071,
-    "ILS": 4.1862,
-    "ISK": 130.9,
-    "USD": 1.1502,
-    "CHF": 1.1409
-  },
-  base: 'EUR',
+  addCurrencyValue: '',
+  rates: {},
+  base: '',
   mainCurrency: 'USD',
-  currencyList: ['IDR', 'CAD'],
-  dataCurr: [
-    {
-      id: 'IDR',
-    }
-  ]
+  currencyList: [],
 }
 
 class App extends Component {
@@ -55,16 +22,32 @@ class App extends Component {
     this.state = initialState
 
     Object.assign(this, TextInputHandler)
+    Object.assign(this, AddButtonHandler)
+    Object.assign(this, CurrencyListHandler)
 
     this.onChange = this.onChange.bind(this)
+    this.onAddCurrencyChange = this.onAddCurrencyChange.bind(this)
+    this.addCurrency = this.addCurrency.bind(this)
+    this.removeListItem = this.removeListItem.bind(this)
+    this.fetchData = this.fetchData.bind(this)
+  }
+
+  componentDidMount() {
+    this.fetchData()
   }
 
   render() {
     return (
-      <div className="App">
-        <CurrencyInput value={this.state.value} onChange={this.onChange} currencyName="USD - United States Dollar" currencyCode="USD" />
-        <CurrencyList data={this.state.currencyList} from={this.state.mainCurrency} value={this.state.value} rates={this.state.rates} />
-      </div>
+      (this.state.fetch ?
+        <div>
+          Loading...
+        </div> :
+        <div className="App">
+          <CurrencyInput value={this.state.value} onChange={this.onChange} currencyName="USD - United States Dollar" currencyCode={this.state.mainCurrency} />
+          <CurrencyList data={this.state.currencyList} from={this.state.mainCurrency} value={this.state.value} rates={this.state.rates} onPressMinus={this.removeListItem} ownState={this} />
+          <AddCurrencyComponent value={this.state.addCurrencyValue} text="Add More Currency" onSubmit={(currencyState) => this.addCurrency(this.state.addCurrencyValue, this.state.rates, currencyState, this.state.currencyList)} onChange={this.onAddCurrencyChange} />
+        </div>
+      )
     );
   }
 }

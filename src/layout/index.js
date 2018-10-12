@@ -1,4 +1,12 @@
 import React, { Fragment } from 'react'
+import {
+  Button,
+  FormGroup,
+  InputGroup,
+  FormControl,
+  ListGroup,
+  ListGroupItem,
+} from 'react-bootstrap'
 import { getConvertedValue } from '../service'
 
 export const CurrencyInput = ({ currencyName, currencyCode, value, onChange, ...props }) => (
@@ -15,17 +23,38 @@ export const CurrencyInput = ({ currencyName, currencyCode, value, onChange, ...
   </Fragment>
 )
 
-export const CurrencyList = ({ data, from, value, rates }) => data.map(item => (
-  <div>
-    <div>
-      <p>{item}</p>
-      <p>{getConvertedValue(from, item, value, rates).toFixed(2)}</p>
-    </div>
-  </div>
-))
+export const CurrencyItem = ({...params}) => {
+  const {onPressMinus, data, ownState, from, value, rates} = params
+
+  return data.map(item => (
+    <ListGroupItem header={item}>
+      {getConvertedValue(from, item, value, rates).toFixed(2)}
+      <Button onClick={(e) => onPressMinus(e, item, ownState)}>
+        -
+      </Button>
+    </ListGroupItem>
+  ))
+}
+
+export const CurrencyList = ({...params}) => (
+  <ListGroup>
+    <CurrencyItem {...params} />
+  </ListGroup>
+)
 
 export const AddCurrencyButton = ({ text, onPress }) => (
-  <Fragment>
-    
-  </Fragment>
+  <Button bsStyle="primary" bsSize="sm" onClick={onPress}>
+    {text}
+  </Button>
+)
+
+export const AddCurrencyForm = ({ onPress, onChange, value }) => (
+  <FormGroup>
+    <InputGroup>
+      <FormControl type="text" onChange={onChange} value={value}/>
+      <InputGroup.Button>
+        <Button onClick={onPress}>Submit</Button>
+      </InputGroup.Button>
+    </InputGroup>
+  </FormGroup>
 )

@@ -1,8 +1,13 @@
 import React from 'react'
-import { shallow } from 'enzyme'
+import { shallow, mount } from 'enzyme'
 import toJson from 'enzyme-to-json'
-import App from '../../App'
+import sinon from 'sinon'
 import ReactDOM from 'react-dom'
+import App from '../../App'
+
+const initialState = {
+  fetch: true,
+}
 
 it('renders without crashing', () => {
   const div = document.createElement('div');
@@ -10,14 +15,12 @@ it('renders without crashing', () => {
   ReactDOM.unmountComponentAtNode(div);
 });
 
-describe('App displays loading text for the first time', () => {
+describe('<App />', () => {
   describe('render()', () => {
-    test('renders the loading text', () => {
+    it('renders the loading text', () => {
       const component = shallow(<App />)
 
       expect(toJson(component)).toMatchSnapshot()
     })
   })
 })
-
-
